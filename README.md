@@ -1,75 +1,58 @@
 # Automated Data Analysis Dashboard
 
-A Python-based data analysis dashboard built with Streamlit for automated data cleaning, statistical analysis, and visualization.
+A data analysis dashboard built with Python and Streamlit, designed as a student learning project to practice data processing, visualization, and automated reporting.
+The application allows users to upload datasets, clean data, detect outliers, perform statistical analysis, and generate interactive visual insights.
 
-## Overview
+# Overview
 
-This project is a student learning project that provides an interactive web interface for analyzing datasets. Users can upload CSV or Excel files and perform comprehensive data analysis including cleaning, statistics, outlier detection, trend analysis, and visualization.
+This dashboard provides an easy-to-use web interface for exploring and analyzing structured datasets.
+Users can upload CSV or Excel files and instantly view descriptive analytics, trends, correlations, and outlier detection results.
+It also supports automatic PDF/HTML report generation.
 
-## Features
+# Features
 
-- **Data Upload** - Support for CSV and Excel files
-- **Statistical Analysis** - Descriptive statistics, correlation analysis, distribution analysis
-- **Outlier Detection** - IQR method, Z-score method, Isolation Forest
-- **Trend Analysis** - Time series analysis and moving averages
-- **Interactive Visualizations** - Dynamic charts using Plotly
-- **Report Generation** - Automated PDF and HTML reports
+Data Upload
+Upload CSV or Excel files directly into the application.
 
-## Technologies Used
+Statistical Analysis
+View summary statistics, correlations, and data distributions.
 
-- **Streamlit** - Web interface
-- **Pandas** - Data manipulation
-- **NumPy** - Numerical operations
-- **Plotly** - Interactive visualizations
-- **SciPy** - Statistical analysis
-- **Scikit-learn** - Machine learning for outlier detection
+Outlier Detection
+Supports multiple techniques including IQR, Z-score, and Isolation Forest.
 
-## Installation
+Trend Analysis
+Perform time-series exploration and moving average smoothing.
 
-1. Install required packages:
-```bash
-pip install -r requirements.txt
-```
+Interactive Visualizations
+Dynamic charts generated using Plotly.
 
-## Usage
+Automatic Report Generation
+Export analysis as a PDF or HTML report.
 
-1. Start the dashboard:
-```bash
-streamlit run app.py
-```
+# Technologies Used
 
-2. Open browser at `http://localhost:8501`
+Streamlit – Web application framework
 
-3. Upload your data file or use the sample retail sales data
+Pandas – Data cleaning and manipulation
 
-4. Explore the analysis tabs
+NumPy – Numeric computations
 
-## Project Structure
+Plotly – Interactive charting
 
-```
-Automated Data Analysis Dashboard/
-├── app.py                      # Main Streamlit application
-├── config.py                   # Configuration settings
-├── requirements.txt            # Python dependencies
-├── modules/
-│   ├── data_cleaner.py        # Data cleaning module
-│   ├── statistical_analyzer.py # Statistical analysis module
-│   ├── outlier_detector.py    # Outlier detection module
-│   ├── trend_analyzer.py      # Trend analysis module
-│   ├── visualizer.py          # Visualization module
-│   └── report_generator.py    # Report generation module
-└── sample_data/
-    └── retail_sales_dataset.csv # Sample retail sales data
-```
+SciPy – Statistical functions
 
-## Sample Data
+Scikit-learn – Machine learning for anomaly detection
 
-The project includes a retail sales dataset with 1,001 transactions containing:
-- Transaction details (ID, Date, Customer ID)
-- Customer demographics (Gender, Age)
-- Product information (Category, Quantity, Price)
-- Sales metrics (Total Amount)
+# Sample Dataset
 
-## Author
+The included retail sales dataset contains 1,001 transactions with:
 
-Student Project - Data Analysis Dashboard
+Transaction IDs & dates
+
+Customer demographics
+
+Product categories & quantities
+
+Pricing and total sales amounts
+
+This sample data helps demonstrate analytics and visualizations.
