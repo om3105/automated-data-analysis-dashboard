@@ -1,17 +1,17 @@
 import pandas as pd
 import numpy as np
-from typing import Dict, Optional
 from scipy import stats
 
 
 class TrendAnalyzer:
     
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df):
         self.df = df
         self.numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
         self.time_column = None
     
-    def detect_time_column(self) -> Optional[str]:
+    # Try to find date column
+    def detect_time_column(self):
         for col in self.df.columns:
             if pd.api.types.is_datetime64_any_dtype(self.df[col]):
                 self.time_column = col
@@ -27,7 +27,8 @@ class TrendAnalyzer:
         
         return None
     
-    def identify_trend(self, column: str, time_column: Optional[str] = None) -> Optional[Dict]:
+    # Determine if trend is increasing or decreasing
+    def identify_trend(self, column, time_column=None):
         if column not in self.numeric_columns:
             return None
         
@@ -63,7 +64,7 @@ class TrendAnalyzer:
             'total_change_percent': total_change
         }
     
-    def calculate_moving_average(self, column: str, window: int = 7) -> pd.Series:
+    def calculate_moving_average(self, column, window=7):
         if column not in self.numeric_columns:
             return pd.Series()
         

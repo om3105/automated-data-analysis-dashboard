@@ -1,39 +1,40 @@
 import pandas as pd
 from fpdf import FPDF
 from datetime import datetime
-from typing import Dict
-from config import REPORT_CONFIG
+from datetime import datetime
 
 
 class ReportGenerator:
     
-    def __init__(self, df: pd.DataFrame, analysis_results: Dict):
+    # Initialize report generator
+    def __init__(self, df, analysis_results):
         self.df = df
         self.analysis_results = analysis_results
         self.pdf = FPDF()
         self.pdf.set_auto_page_break(auto=True, margin=15)
     
+    # Add title page
     def _add_title_page(self):
         self.pdf.add_page()
         self.pdf.set_font('Arial', 'B', 24)
         self.pdf.cell(0, 60, '', 0, 1)
-        self.pdf.cell(0, 10, REPORT_CONFIG['title'], 0, 1, 'C')
+        self.pdf.cell(0, 10, "Data Analysis Report", 0, 1, 'C')
         
         self.pdf.set_font('Arial', '', 12)
         self.pdf.cell(0, 10, f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", 0, 1, 'C')
-        self.pdf.cell(0, 10, f"Author: {REPORT_CONFIG['author']}", 0, 1, 'C')
+        self.pdf.cell(0, 10, "Author: Automated Dashboard", 0, 1, 'C')
     
-    def _add_section_header(self, title: str):
+    def _add_section_header(self, title):
         self.pdf.set_font('Arial', 'B', 16)
         self.pdf.cell(0, 10, title, 0, 1, 'L')
         self.pdf.ln(5)
     
-    def _add_subsection_header(self, title: str):
+    def _add_subsection_header(self, title):
         self.pdf.set_font('Arial', 'B', 12)
         self.pdf.cell(0, 8, title, 0, 1, 'L')
         self.pdf.ln(2)
     
-    def _add_text(self, text: str):
+    def _add_text(self, text):
         self.pdf.set_font('Arial', '', 10)
         # Handle unicode characters for FPDF (latin-1 only)
         sanitized_text = text.encode('latin-1', 'replace').decode('latin-1')
@@ -157,7 +158,8 @@ Column: {col}
         for rec in recommendations:
             self._add_text(rec)
     
-    def generate_report(self, output_path: str) -> str:
+    # Generate the final PDF
+    def generate_report(self, output_path):
         # Let exceptions bubble up to be caught by the app
         self._add_title_page()
         self._add_dataset_overview()
@@ -169,36 +171,4 @@ Column: {col}
         self.pdf.output(output_path)
         return output_path
     
-    def generate_html_report(self) -> str:
-        html = f"""
-        <html>
-        <head>
-            <title>{REPORT_CONFIG['title']}</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; margin: 20px; background-color: #1a1a1a; color: #e0e0e0; }}
-                h1 {{ color: #4CAF50; }}
-                h2 {{ color: #2196F3; border-bottom: 2px solid #2196F3; padding-bottom: 5px; }}
-                .metric {{ background-color: #2a2a2a; padding: 10px; margin: 10px 0; border-radius: 5px; }}
-                table {{ border-collapse: collapse; width: 100%; margin: 10px 0; }}
-                th, td {{ border: 1px solid #444; padding: 8px; text-align: left; }}
-                th {{ background-color: #333; }}
-            </style>
-        </head>
-        <body>
-            <h1>{REPORT_CONFIG['title']}</h1>
-            <p>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
-            
-            <h2>Dataset Overview</h2>
-            <div class="metric">
-                <p><strong>Shape:</strong> {self.df.shape[0]} rows × {self.df.shape[1]} columns</p>
-                <p><strong>Missing Values:</strong> {self.df.isnull().sum().sum()}</p>
-                <p><strong>Duplicates:</strong> {self.df.duplicated().sum()}</p>
-            </div>
-            
-            <h2>Data Preview</h2>
-            {self.df.head(10).to_html()}
-        </body>
-        </html>
-        """
-        
-        return html
+

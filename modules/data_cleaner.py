@@ -1,12 +1,10 @@
 import pandas as pd
 import numpy as np
-from typing import Dict, List, Tuple, Optional
-from config import CLEANING_CONFIG
 
 
 class DataCleaner:
     
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df):
         self.df = df.copy()
         self.original_df = df.copy()
         self.cleaning_report = {
@@ -15,7 +13,8 @@ class DataCleaner:
             'final_shape': None
         }
     
-    def handle_missing_values(self, strategy: str = 'mean', columns: Optional[List[str]] = None) -> pd.DataFrame:
+    # Fill missing values with different strategies
+    def handle_missing_values(self, strategy='mean', columns=None):
         if columns is None:
             columns = self.df.columns.tolist()
         
@@ -51,7 +50,8 @@ class DataCleaner:
         
         return self.df
     
-    def remove_duplicates(self, subset: Optional[List[str]] = None, keep: str = 'first') -> pd.DataFrame:
+    # Remove duplicate rows
+    def remove_duplicates(self, subset=None, keep='first'):
         initial_rows = len(self.df)
         self.df = self.df.drop_duplicates(subset=subset, keep=keep)
         final_rows = len(self.df)
@@ -63,7 +63,8 @@ class DataCleaner:
         
         return self.df
     
-    def convert_data_types(self, type_map: Optional[Dict[str, str]] = None) -> pd.DataFrame:
+    # Change data types
+    def convert_data_types(self, type_map=None):
         if type_map is None:
             type_map = {}
             for col in self.df.columns:
@@ -99,11 +100,11 @@ class DataCleaner:
         
         return self.df
     
-    def get_cleaning_report(self) -> Dict:
+    def get_cleaning_report(self):
         self.cleaning_report['final_shape'] = self.df.shape
         self.cleaning_report['rows_removed'] = self.original_df.shape[0] - self.df.shape[0]
         self.cleaning_report['columns_removed'] = self.original_df.shape[1] - self.df.shape[1]
         return self.cleaning_report
     
-    def get_cleaned_data(self) -> pd.DataFrame:
+    def get_cleaned_data(self):
         return self.df

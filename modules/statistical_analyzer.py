@@ -1,17 +1,17 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
-from typing import Dict, List, Optional, Tuple
 
 
 class StatisticalAnalyzer:
     
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df):
         self.df = df
         self.numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
         self.categorical_columns = df.select_dtypes(include=['object', 'category']).columns.tolist()
     
-    def descriptive_statistics(self) -> pd.DataFrame:
+    # Calculate basic stats
+    def descriptive_statistics(self):
         if not self.numeric_columns:
             return pd.DataFrame()
             
@@ -28,14 +28,15 @@ class StatisticalAnalyzer:
         desc_stats = pd.concat([desc_stats, additional_stats])
         return desc_stats
     
-    def correlation_analysis(self, method: str = 'pearson') -> pd.DataFrame:
+    def correlation_analysis(self, method='pearson'):
         if len(self.numeric_columns) < 2:
             return pd.DataFrame()
         
         corr_matrix = self.df[self.numeric_columns].corr(method=method)
         return corr_matrix
     
-    def get_strong_correlations(self, threshold: float = 0.7, method: str = 'pearson') -> List[Tuple[str, str, float]]:
+    # Find strong correlations > threshold
+    def get_strong_correlations(self, threshold=0.7, method='pearson'):
         corr_matrix = self.correlation_analysis(method=method)
         strong_corr = []
         
@@ -51,7 +52,7 @@ class StatisticalAnalyzer:
         
         return sorted(strong_corr, key=lambda x: abs(x[2]), reverse=True)
     
-    def distribution_analysis(self, column: str) -> Dict:
+    def distribution_analysis(self, column):
         if column not in self.numeric_columns:
             return {}
         

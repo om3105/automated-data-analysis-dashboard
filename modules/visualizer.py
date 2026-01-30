@@ -2,17 +2,16 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from typing import Optional
 
 
 class DataVisualizer:
     
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df):
         self.df = df
         self.numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
         self.categorical_columns = df.select_dtypes(include=['object', 'category']).columns.tolist()
     
-    def plot_distribution(self, column: str, plot_type: str = 'histogram') -> go.Figure:
+    def plot_distribution(self, column, plot_type='histogram'):
         if column not in self.df.columns:
             return go.Figure()
         
@@ -27,7 +26,7 @@ class DataVisualizer:
         
         return fig
     
-    def plot_correlation_heatmap(self, method: str = 'pearson') -> go.Figure:
+    def plot_correlation_heatmap(self, method='pearson'):
         columns = self.numeric_columns
         
         if len(columns) < 2:
@@ -48,7 +47,7 @@ class DataVisualizer:
         fig.update_layout(title=f'Correlation Heatmap', width=700, height=700)
         return fig
     
-    def plot_time_series(self, time_column: str, value_column: str, moving_average: Optional[int] = None) -> go.Figure:
+    def plot_time_series(self, time_column, value_column, moving_average=None):
         df_sorted = self.df.sort_values(time_column)
         
         fig = go.Figure()
@@ -73,7 +72,7 @@ class DataVisualizer:
         fig.update_layout(title=f'{value_column} over Time', xaxis_title=time_column, yaxis_title=value_column)
         return fig
     
-    def plot_scatter(self, x_column: str, y_column: str, color_column: Optional[str] = None, trendline: bool = True) -> go.Figure:
+    def plot_scatter(self, x_column, y_column, color_column=None, trendline=True):
         fig = px.scatter(
             self.df,
             x=x_column,
@@ -84,7 +83,7 @@ class DataVisualizer:
         )
         return fig
     
-    def plot_categorical(self, column: str, plot_type: str = 'bar', top_n: Optional[int] = None) -> go.Figure:
+    def plot_categorical(self, column, plot_type='bar', top_n=None):
         value_counts = self.df[column].value_counts()
         
         if top_n:
@@ -99,7 +98,7 @@ class DataVisualizer:
         
         return fig
     
-    def plot_outliers(self, column: str, outlier_mask: pd.Series) -> go.Figure:
+    def plot_outliers(self, column, outlier_mask):
         fig = go.Figure()
         
         fig.add_trace(go.Scatter(

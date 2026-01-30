@@ -1,17 +1,18 @@
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import IsolationForest
-from typing import Dict, List, Optional
+from scipy import stats
 
 
 class OutlierDetector:
     
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df):
         self.df = df
         self.numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
         self.outliers = {}
     
-    def detect_iqr(self, columns: Optional[List[str]] = None, multiplier: float = 1.5) -> Dict[str, pd.Series]:
+    # Use IQR method
+    def detect_iqr(self, columns=None, multiplier=1.5):
         if columns is None:
             columns = self.numeric_columns
         
@@ -28,7 +29,8 @@ class OutlierDetector:
         self.outliers['iqr'] = outliers
         return outliers
     
-    def detect_zscore(self, columns: Optional[List[str]] = None, threshold: float = 3) -> Dict[str, pd.Series]:
+    # Use Z-Score method
+    def detect_zscore(self, columns=None, threshold=3):
         if columns is None:
             columns = self.numeric_columns
         
@@ -42,7 +44,8 @@ class OutlierDetector:
         self.outliers['zscore'] = outliers
         return outliers
     
-    def detect_isolation_forest(self, contamination: float = 0.1) -> pd.Series:
+    # Use Isolation Forest (Machine Learning)
+    def detect_isolation_forest(self, contamination=0.1):
         if not self.numeric_columns:
             return pd.Series(False, index=self.df.index)
         
@@ -60,7 +63,7 @@ class OutlierDetector:
         self.outliers['isolation_forest'] = outliers
         return outliers
     
-    def get_outlier_summary(self, method: str) -> Dict:
+    def get_outlier_summary(self, method):
         if method not in self.outliers:
             return {}
         
@@ -86,7 +89,7 @@ class OutlierDetector:
                 'outlier_percentage': (outliers.sum() / len(self.df)) * 100
             }
     
-    def get_outlier_dataframe(self, method: str) -> pd.DataFrame:
+    def get_outlier_dataframe(self, method):
         if method not in self.outliers:
             return pd.DataFrame()
         
@@ -99,6 +102,3 @@ class OutlierDetector:
             return self.df[combined_mask]
         else:
             return self.df[outliers]
-
-
-from scipy import stats

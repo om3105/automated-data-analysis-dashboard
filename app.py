@@ -258,6 +258,9 @@ if df is not None:
             file_name="analysis_report.pdf",
             mime="application/pdf"
         )
+        
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("Created by **Om Chandrakant Deo**")
 
 else:
     # Welcome message
