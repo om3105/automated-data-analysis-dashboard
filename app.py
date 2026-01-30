@@ -184,6 +184,10 @@ if df is not None:
     st.sidebar.markdown("---")
     st.sidebar.subheader("Export Report")
     
+    # Initialize session state for report
+    if 'report_pdf' not in st.session_state:
+        st.session_state.report_pdf = None
+    
     if st.sidebar.button("Generate PDF Report"):
         with st.spinner("Generating report..."):
             # 1. Gather all analysis results
@@ -225,16 +229,9 @@ if df is not None:
             filename = f"analysis_report_{timestamp}.pdf"
             generator.generate_report(filename)
             
-            # 3. Create download button
+            # Read and store in session state
             with open(filename, "rb") as f:
-                pdf_bytes = f.read()
-            
-            st.sidebar.download_button(
-                label="Download PDF Report",
-                data=pdf_bytes,
-                file_name=filename,
-                mime="application/pdf"
-            )
+                st.session_state.report_pdf = f.read()
             
             # Cleanup
             try:
@@ -243,6 +240,15 @@ if df is not None:
                 pass
             
             st.sidebar.success("Report generated!")
+
+    # Show download button if report is ready
+    if st.session_state.report_pdf is not None:
+        st.sidebar.download_button(
+            label="Download PDF Report",
+            data=st.session_state.report_pdf,
+            file_name="analysis_report.pdf",
+            mime="application/pdf"
+        )
 
 else:
     # Welcome message
