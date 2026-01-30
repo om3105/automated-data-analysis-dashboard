@@ -180,6 +180,70 @@ if df is not None:
                 fig = visualizer.plot_categorical(col, plot_type='bar')
                 st.plotly_chart(fig, use_container_width=True)
 
+    # Sidebar - Report Generation
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Export Report")
+    
+    if st.sidebar.button("Generate PDF Report"):
+        with st.spinner("Generating report..."):
+            # 1. Gather all analysis results
+            # Statistics
+            analyzer = StatisticalAnalyzer(df)
+            stats_df = analyzer.descriptive_statistics()
+            correlations = analyzer.get_strong_correlations()
+            
+            # Outliers (Auto-detect using IQR for all numeric columns)
+            outlier_detector = OutlierDetector(df)
+            numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+            outlier_detector.detect_iqr(numeric_cols)
+            outliers_summary = outlier_detector.get_outlier_summary('iqr')
+            
+            # Trends (Auto-detect for first time column found)
+            trend_results = {}
+            trend_analyzer = TrendAnalyzer(df)
+            time_col = trend_analyzer.detect_time_column()
+            if time_col:
+                for col in numeric_cols:
+                    trend = trend_analyzer.identify_trend(col, time_col)
+                    if trend:
+                        trend_results[col] = {'trend': trend}
+            
+            # Compile results
+            analysis_results = {
+                'descriptive_stats': stats_df,
+                'correlations': correlations,
+                'outliers': {'iqr': outliers_summary}, # Wrap in method key as expected by generator
+                'trends': trend_results
+            }
+            
+            # 2. Generate PDF
+            from modules.report_generator import ReportGenerator
+            generator = ReportGenerator(df, analysis_results)
+            
+            # Save to temporary file
+            timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"analysis_report_{timestamp}.pdf"
+            generator.generate_report(filename)
+            
+            # 3. Create download button
+            with open(filename, "rb") as f:
+                pdf_bytes = f.read()
+            
+            st.sidebar.download_button(
+                label="Download PDF Report",
+                data=pdf_bytes,
+                file_name=filename,
+                mime="application/pdf"
+            )
+            
+            # Cleanup
+            try:
+                os.remove(filename)
+            except:
+                pass
+            
+            st.sidebar.success("Report generated!")
+
 else:
     # Welcome message
     st.info("Please upload a data file or use sample data to get started")
