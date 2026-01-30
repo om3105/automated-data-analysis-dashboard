@@ -12,6 +12,9 @@ class StatisticalAnalyzer:
         self.categorical_columns = df.select_dtypes(include=['object', 'category']).columns.tolist()
     
     def descriptive_statistics(self) -> pd.DataFrame:
+        if not self.numeric_columns:
+            return pd.DataFrame()
+            
         desc_stats = self.df[self.numeric_columns].describe()
         
         additional_stats = pd.DataFrame({
