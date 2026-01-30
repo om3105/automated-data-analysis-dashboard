@@ -227,19 +227,28 @@ if df is not None:
             # Save to temporary file
             timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
             filename = f"analysis_report_{timestamp}.pdf"
-            generator.generate_report(filename)
             
-            # Read and store in session state
-            with open(filename, "rb") as f:
-                st.session_state.report_pdf = f.read()
+            try:
+                generator.generate_report(filename)
+                
+                # Check if file was actually created
+                if os.path.exists(filename):
+                    # Read and store in session state
+                    with open(filename, "rb") as f:
+                        st.session_state.report_pdf = f.read()
+                    st.sidebar.success("Report generated!")
+                else:
+                    st.sidebar.error("Report file was not created.")
+                    
+            except Exception as e:
+                st.sidebar.error(f"Failed to generate report: {str(e)}")
             
             # Cleanup
             try:
-                os.remove(filename)
+                if os.path.exists(filename):
+                    os.remove(filename)
             except:
                 pass
-            
-            st.sidebar.success("Report generated!")
 
     # Show download button if report is ready
     if st.session_state.report_pdf is not None:

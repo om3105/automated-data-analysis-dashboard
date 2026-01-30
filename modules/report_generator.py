@@ -35,7 +35,9 @@ class ReportGenerator:
     
     def _add_text(self, text: str):
         self.pdf.set_font('Arial', '', 10)
-        self.pdf.multi_cell(0, 6, text)
+        # Handle unicode characters for FPDF (latin-1 only)
+        sanitized_text = text.encode('latin-1', 'replace').decode('latin-1')
+        self.pdf.multi_cell(0, 6, sanitized_text)
         self.pdf.ln(3)
     
     def _add_dataset_overview(self):
@@ -156,19 +158,16 @@ Column: {col}
             self._add_text(rec)
     
     def generate_report(self, output_path: str) -> str:
-        try:
-            self._add_title_page()
-            self._add_dataset_overview()
-            self._add_statistical_summary()
-            self._add_outlier_summary()
-            self._add_trend_summary()
-            self._add_recommendations()
-            
-            self.pdf.output(output_path)
-            return output_path
-        except Exception as e:
-            print(f"Error generating report: {e}")
-            return ""
+        # Let exceptions bubble up to be caught by the app
+        self._add_title_page()
+        self._add_dataset_overview()
+        self._add_statistical_summary()
+        self._add_outlier_summary()
+        self._add_trend_summary()
+        self._add_recommendations()
+        
+        self.pdf.output(output_path)
+        return output_path
     
     def generate_html_report(self) -> str:
         html = f"""
