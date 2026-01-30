@@ -11,7 +11,6 @@ class OutlierDetector:
         self.numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
         self.outliers = {}
     
-    # Use IQR method
     def detect_iqr(self, columns=None, multiplier=1.5):
         if columns is None:
             columns = self.numeric_columns
@@ -29,7 +28,6 @@ class OutlierDetector:
         self.outliers['iqr'] = outliers
         return outliers
     
-    # Use Z-Score method
     def detect_zscore(self, columns=None, threshold=3):
         if columns is None:
             columns = self.numeric_columns
@@ -44,7 +42,6 @@ class OutlierDetector:
         self.outliers['zscore'] = outliers
         return outliers
     
-    # Use Isolation Forest (Machine Learning)
     def detect_isolation_forest(self, contamination=0.1):
         if not self.numeric_columns:
             return pd.Series(False, index=self.df.index)

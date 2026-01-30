@@ -10,7 +10,6 @@ class StatisticalAnalyzer:
         self.numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
         self.categorical_columns = df.select_dtypes(include=['object', 'category']).columns.tolist()
     
-    # Calculate basic stats
     def descriptive_statistics(self):
         if not self.numeric_columns:
             return pd.DataFrame()
@@ -35,7 +34,6 @@ class StatisticalAnalyzer:
         corr_matrix = self.df[self.numeric_columns].corr(method=method)
         return corr_matrix
     
-    # Find strong correlations > threshold
     def get_strong_correlations(self, threshold=0.7, method='pearson'):
         corr_matrix = self.correlation_analysis(method=method)
         strong_corr = []

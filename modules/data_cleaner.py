@@ -13,7 +13,6 @@ class DataCleaner:
             'final_shape': None
         }
     
-    # Fill missing values with different strategies
     def handle_missing_values(self, strategy='mean', columns=None):
         if columns is None:
             columns = self.df.columns.tolist()
@@ -50,7 +49,6 @@ class DataCleaner:
         
         return self.df
     
-    # Remove duplicate rows
     def remove_duplicates(self, subset=None, keep='first'):
         initial_rows = len(self.df)
         self.df = self.df.drop_duplicates(subset=subset, keep=keep)
@@ -63,7 +61,6 @@ class DataCleaner:
         
         return self.df
     
-    # Change data types
     def convert_data_types(self, type_map=None):
         if type_map is None:
             type_map = {}

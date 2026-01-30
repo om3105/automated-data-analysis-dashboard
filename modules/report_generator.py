@@ -6,14 +6,12 @@ from datetime import datetime
 
 class ReportGenerator:
     
-    # Initialize report generator
     def __init__(self, df, analysis_results):
         self.df = df
         self.analysis_results = analysis_results
         self.pdf = FPDF()
         self.pdf.set_auto_page_break(auto=True, margin=15)
     
-    # Add title page
     def _add_title_page(self):
         self.pdf.add_page()
         self.pdf.set_font('Arial', 'B', 24)
@@ -36,7 +34,6 @@ class ReportGenerator:
     
     def _add_text(self, text):
         self.pdf.set_font('Arial', '', 10)
-        # Handle unicode characters for FPDF (latin-1 only)
         sanitized_text = text.encode('latin-1', 'replace').decode('latin-1')
         self.pdf.multi_cell(0, 6, sanitized_text)
         self.pdf.ln(3)
@@ -158,9 +155,7 @@ Column: {col}
         for rec in recommendations:
             self._add_text(rec)
     
-    # Generate the final PDF
     def generate_report(self, output_path):
-        # Let exceptions bubble up to be caught by the app
         self._add_title_page()
         self._add_dataset_overview()
         self._add_statistical_summary()

@@ -10,7 +10,6 @@ class TrendAnalyzer:
         self.numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
         self.time_column = None
     
-    # Try to find date column
     def detect_time_column(self):
         for col in self.df.columns:
             if pd.api.types.is_datetime64_any_dtype(self.df[col]):
@@ -27,7 +26,6 @@ class TrendAnalyzer:
         
         return None
     
-    # Determine if trend is increasing or decreasing
     def identify_trend(self, column, time_column=None):
         if column not in self.numeric_columns:
             return None
