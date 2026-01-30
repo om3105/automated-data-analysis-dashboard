@@ -1,7 +1,3 @@
-"""
-Configuration settings for the Data Analysis Dashboard
-"""
-
 # Data Cleaning Configuration
 CLEANING_CONFIG = {
     'missing_value_strategies': ['drop', 'mean', 'median', 'mode', 'forward_fill', 'backward_fill'],
@@ -38,7 +34,7 @@ VIZ_CONFIG = {
 # Dashboard Configuration
 DASHBOARD_CONFIG = {
     'page_title': 'Data Analysis Dashboard',
-    'page_icon': '📊',
+    'page_icon': '',
     'layout': 'wide',
     'max_upload_size': 200,
 }
